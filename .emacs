@@ -23,6 +23,7 @@
     (setq unix-init-ac-dict-path "~/.emacs.d/plugins/auto-complete/dict")
     (add-to-list 'custom-theme-load-path unix-init-ct-path))
 
+(push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
 
 (require 'cl)
 (setq-default inferior-lisp-program "sbcl")
@@ -38,10 +39,15 @@
                             smartparens
                             auto-complete
                             web-mode
-			    js2-mode
+						    js2-mode
                             lsp-mode
+                            flymake
                             company-lsp
-                            use-package))
+                            use-package
+							omnisharp
+							csharp-mode
+                            vue-mode
+                            emmet-mode))
 
 (defun packages-installed-p ()
   (loop for package in required-packages
@@ -98,33 +104,33 @@
  '(custom-enabled-themes (quote (cyberpunk)))
  '(custom-safe-themes
    (quote
-	("687e997f50a47c647c5132f0671df27b8a3ff4f18e31210dc53abeaa7ea8cde3" "86e74c4c42677b593d1fab0a548606e7ef740433529b40232774fbb6bc22c048" "94146ac747852749e9444b184eb1e958f0e546072f66743929a05c3af62de473" "4e839b24f87c529e837535d0a7880f40ac3867b6e3e73a2cf2bb40bab53d4658" "5adf7ad078568675387aac96e142c1300006531721bca35b941e4ed3e3b59000" default)))
+    ("687e997f50a47c647c5132f0671df27b8a3ff4f18e31210dc53abeaa7ea8cde3" "86e74c4c42677b593d1fab0a548606e7ef740433529b40232774fbb6bc22c048" "94146ac747852749e9444b184eb1e958f0e546072f66743929a05c3af62de473" "4e839b24f87c529e837535d0a7880f40ac3867b6e3e73a2cf2bb40bab53d4658" "5adf7ad078568675387aac96e142c1300006531721bca35b941e4ed3e3b59000" default)))
  '(fci-rule-character-color "#202020")
  '(fci-rule-color "#383838")
  '(fringe-mode 4 nil (fringe))
  '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
  '(highlight-tail-colors
    (quote
-	(("#3C3D37" . 0)
-	 ("#679A01" . 20)
-	 ("#4BBEAE" . 30)
-	 ("#1DB4D0" . 50)
-	 ("#9A8F21" . 60)
-	 ("#A75B00" . 70)
-	 ("#F309DF" . 85)
-	 ("#3C3D37" . 100))))
+    (("#3C3D37" . 0)
+     ("#679A01" . 20)
+     ("#4BBEAE" . 30)
+     ("#1DB4D0" . 50)
+     ("#9A8F21" . 60)
+     ("#A75B00" . 70)
+     ("#F309DF" . 85)
+     ("#3C3D37" . 100))))
  '(magit-diff-use-overlays nil)
  '(main-line-color1 "#1E1E1E")
  '(main-line-color2 "#111111")
  '(main-line-separator-style (quote chamfer))
  '(package-archives
    (quote
-	(("melpa" . "http://melpa.org/packages/")
-	 ("melpa-stable" . "https://stable.melpa.org/packages/")
-	 ("gnu" . "https://elpa.gnu.org/packages/"))))
+    (("melpa" . "http://melpa.org/packages/")
+     ("melpa-stable" . "https://stable.melpa.org/packages/")
+     ("gnu" . "https://elpa.gnu.org/packages/"))))
  '(package-selected-packages
    (quote
-	(company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime)))
+    (neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime)))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(powerline-color1 "#1E1E1E")
@@ -132,44 +138,85 @@
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
    (quote
-	((20 . "#F92672")
-	 (40 . "#CF4F1F")
-	 (60 . "#C26C0F")
-	 (80 . "#E6DB74")
-	 (100 . "#AB8C00")
-	 (120 . "#A18F00")
-	 (140 . "#989200")
-	 (160 . "#8E9500")
-	 (180 . "#A6E22E")
-	 (200 . "#729A1E")
-	 (220 . "#609C3C")
-	 (240 . "#4E9D5B")
-	 (260 . "#3C9F79")
-	 (280 . "#A1EFE4")
-	 (300 . "#299BA6")
-	 (320 . "#2896B5")
-	 (340 . "#2790C3")
-	 (360 . "#66D9EF"))))
+    ((20 . "#F92672")
+     (40 . "#CF4F1F")
+     (60 . "#C26C0F")
+     (80 . "#E6DB74")
+     (100 . "#AB8C00")
+     (120 . "#A18F00")
+     (140 . "#989200")
+     (160 . "#8E9500")
+     (180 . "#A6E22E")
+     (200 . "#729A1E")
+     (220 . "#609C3C")
+     (240 . "#4E9D5B")
+     (260 . "#3C9F79")
+     (280 . "#A1EFE4")
+     (300 . "#299BA6")
+     (320 . "#2896B5")
+     (340 . "#2790C3")
+     (360 . "#66D9EF"))))
  '(vc-annotate-very-old-color nil)
  '(weechat-color-list
    (quote
-	(unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0"))))
+    (unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(js2-warning ((t nil))))
  
 ;; Dired
 (require 'dired)
-(setq dired-recursive-deletes 'top) 
+(setq dired-recursive-deletes 'top)
+
+;;; C#
+
+(autoload 'csharp-mode "csharp-mode" "Major mode for editing C# code." t)
+(setq auto-mode-alist
+      (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
+
+(defun my-csharp-mode-fn ()
+  (turn-on-auto-revert-mode)
+  (setq indent-tabs-mode nil)
+  )
+
+(add-hook  'csharp-mode-hook 'my-csharp-mode-fn t)
+
+(eval-after-load 'company
+  '(progn
+     (define-key company-active-map (kbd "\c-n") 'company-select-next)
+     (define-key company-active-map [control n] 'company-select-next)
+     (define-key company-active-map (kbd "\c-p") 'company-select-previous)
+     (define-key company-active-map [control p] 'company-select-previous)
+     )
+  )
+
+(eval-after-load 'company
+  '(add-to-list 'company-backends #'company-omnisharp))
+
+(require 'csharp-mode)
+(add-hook 'csharp-mode-hook
+	  '(lambda()
+	     (setq comment-column 40)
+	     (setq c-basic-offset 4)
+	    (flycheck-mode)
+        (omnisharp-mode)
+        (company-mode)
+        (omnisharp-start-omnisharp-server)
+	     )
+	      )
+
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-omnisharp)
+  )
  
  ;; Web-mode
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  
 (require 'web-mode)
-
+	
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
@@ -207,9 +254,12 @@
     ("xml"  . "/other/path/.*\\.api\\'")
     ("jsx"  . "/some/react/path/.*\\.js[x]?\\'")))
 (define-key web-mode-map (kbd "C-n") 'web-mode-tag-match)
-)
+    )
+
+(setq web-mode-enable-current-element-highlight t)
 
 (add-hook 'web-mode-hook  'my-web-mode-hook)
+(add-hook 'web-mode-hook  'emmet-mode)
 
 ;;; JS
 
@@ -224,8 +274,7 @@
    '(progn
       (require 'tern-auto-complete)
       (tern-ac-setup)))
-	  
-	  
+
 ;;; LSP-MODE
 
 (require 'lsp-mode)
@@ -268,7 +317,7 @@
 (tooltip-mode      -1)
 (menu-bar-mode     -1) ;; отключаем графическое меню
 (tool-bar-mode     -1) ;; отключаем tool-bar
-(scroll-bar-mode   -1) ;; отключаем полосу прокрутки
+;;(scroll-bar-mode   -1) ;; отключаем полосу прокрутки
 ;;(blink-cursor-mode -1) ;; курсор не мигает
 (setq use-dialog-box     nil) ;; никаких графических диалогов и окон - все через минибуфер
 (setq redisplay-dont-pause t)  ;; лучшая отрисовка буфера
@@ -297,7 +346,7 @@
 (setq linum-format " %d") ;; задаем формат нумерации строк
 
 ;; Fringe settings
-(fringe-mode '(8 . 0)) ;; органичиталь текста только слева
+(fringe-mode '(8 . 0)) ;; ограничиталь текста только слева
 (setq-default indicate-empty-lines t) ;; отсутствие строки выделить глифами рядом с полосой с номером строки
 (setq-default indicate-buffer-boundaries 'left) ;; индикация только слева
 
@@ -316,7 +365,7 @@
 (global-set-key (kbd "<f2>") 'bs-show) ;; запуск buffer selection кнопкой F2
 		
 ;; Indent settings
-(setq-default indent-tabs-mode t) ;; возможность ставить отступы TAB'ом
+(setq-default indent-tabs-mode nil) ;; возможность ставить отступы TAB'ом
 (setq-default tab-width          4) ;; ширина табуляции - 4 пробельных символа
 (setq-default c-basic-offset     4)
 (setq-default standart-indent    4) ;; стандартная ширина отступа - 4 пробельных символа
@@ -364,52 +413,53 @@
 (define-key cfg-mode-map (kbd "C-u") 'kill-line)
 (define-key cfg-mode-map (kbd "C-o") 'beginning-of-defun)
 (define-key cfg-mode-map (kbd "C-p") 'end-of-defun)
-(define-key cfg-mode-map (kbd "TAB") 'insert-tab-char)
+(define-key cfg-mode-map (kbd "C-b") 'kill-buffer)
+;(define-key cfg-mode-map (kbd "TAB") 'insert-tab-char)
 
 (defun insert-tab-char ()
-  "Insert a tab char. (ASCII 9, \t)"
-  (interactive)
-  (insert "\t"))
+"Insert a tab char. (ASCII 9, \t)"
+(interactive)
+(insert "\t"))
 
 (define-minor-mode cfg-mode
-  "cfg-mode"
-  t
-  " cfg"
-  cfg-mode-map)
-  
+"cfg-mode"
+t
+" cfg"
+cfg-mode-map)
+
 (defadvice load (after cfg-keybindings-priority)
-  (if (not (eq (car (car minor-mode-map-alist)) 'cfg-mode))
-      (let ((mykeys (assq 'cfg-mode minor-mode-map-alist)))
-        (assq-delete-all 'cfg-mode minor-mode-map-alist)
-        (add-to-list 'minor-mode-map-alist mykeys))))
+(if (not (eq (car (car minor-mode-map-alist)) 'cfg-mode))
+(let ((mykeys (assq 'cfg-mode minor-mode-map-alist)))
+(assq-delete-all 'cfg-mode minor-mode-map-alist)
+(add-to-list 'minor-mode-map-alist mykeys))))
 (ad-activate 'load)
 
 (defun turn-on-cfg-mode ()
-  (interactive)
-  (cfg-mode t))
+(interactive)
+(cfg-mode t))
 
 (defun turn-off-cfg-mode ()
-  (interactive)
-  (cfg-mode -1))
+(interactive)
+(cfg-mode -1))
 
 (define-globalized-minor-mode global-cfg-mode cfg-mode turn-on-cfg-mode)
 
 (defun lcl:get-hotkeys ()
-  (list
-   (list "C-x u" 'undo-tree-visualize)
-   ...
-   (list "M-Z" 'undo-tree-redo)
-   (list "M-z" 'undo-tree-undo)))
+(list
+(list "C-x u" 'undo-tree-visualize)
+...
+(list "M-Z" 'undo-tree-redo)
+(list "M-z" 'undo-tree-undo)))
 
 (defun cfg:cfg-hotheys (map)
-  (dolist (k (lcl:get-hotkeys))
-    (when k
-      (let ((key (kbd (car k)))
-            (func (car (cdr k))))
-        (define-key map key func)
-        (global-set-key key func)))))
+(dolist (k (lcl:get-hotkeys))
+(when k
+(let ((key (kbd (car k)))
+(func (car (cdr k))))
+(define-key map key func)
+(global-set-key key func)))))
 
 (defun cfg:cfg ()
-  (add-hook 'minibuffer-setup-hook 'turn-off-cfg-mode)
-  (cfg:cfg-hotheys cfg-mode-map)
-  (global-cfg-mode))
+(add-hook 'minibuffer-setup-hook 'turn-off-cfg-mode)
+(cfg:cfg-hotheys cfg-mode-map)
+(global-cfg-mode))
