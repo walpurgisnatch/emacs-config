@@ -1,7 +1,9 @@
 (defun system-is-linux()
     (string-equal system-type "gnu/linux"))
 (defun system-is-windows()
-    (string-equal system-type "windows-nt"))
+  (string-equal system-type "windows-nt"))
+
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 ;; MS Windows path-variable
 (when (system-is-windows)
@@ -13,7 +15,7 @@
     (add-to-list 'custom-theme-load-path win-init-ct-path)
     (add-to-list 'load-path win-init-pl-path))
 
-;; Unix path-variable
+;; Unix path-variableo
 (when (system-is-linux)
     (setq unix-sbcl-bin          "/usr/bin/sbcl")
     (setq unix-init-path         "~/.emacs.d")
@@ -47,7 +49,12 @@
 							omnisharp
 							csharp-mode
                             vue-mode
-                            emmet-mode))
+                            emmet-mode
+                            company
+                            flycheck
+                            yasnippet
+                            go-eldoc
+                            company-go))
 
 (defun packages-installed-p ()
   (loop for package in required-packages
@@ -130,7 +137,7 @@
      ("gnu" . "https://elpa.gnu.org/packages/"))))
  '(package-selected-packages
    (quote
-    (neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime)))
+    (go-mode php-mode neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime)))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(powerline-color1 "#1E1E1E")
@@ -171,133 +178,7 @@
 (require 'dired)
 (setq dired-recursive-deletes 'top)
 
-;;; C#
-
-(autoload 'csharp-mode "csharp-mode" "Major mode for editing C# code." t)
-(setq auto-mode-alist
-      (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
-
-(defun my-csharp-mode-fn ()
-  (turn-on-auto-revert-mode)
-  (setq indent-tabs-mode nil)
-  )
-
-(add-hook  'csharp-mode-hook 'my-csharp-mode-fn t)
-
-(eval-after-load 'company
-  '(progn
-     (define-key company-active-map (kbd "\c-n") 'company-select-next)
-     (define-key company-active-map [control n] 'company-select-next)
-     (define-key company-active-map (kbd "\c-p") 'company-select-previous)
-     (define-key company-active-map [control p] 'company-select-previous)
-     )
-  )
-
-(eval-after-load 'company
-  '(add-to-list 'company-backends #'company-omnisharp))
-
-(require 'csharp-mode)
-(add-hook 'csharp-mode-hook
-	  '(lambda()
-	     (setq comment-column 40)
-	     (setq c-basic-offset 4)
-	    (flycheck-mode)
-        (omnisharp-mode)
-        (company-mode)
-        (omnisharp-start-omnisharp-server)
-	     )
-	      )
-
-(eval-after-load 'company
-  '(add-to-list 'company-backends 'company-omnisharp)
-  )
- 
- ;; Web-mode
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- 
-(require 'web-mode)
-	
-(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.api\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("/some/react/path/.*\\.js[x]?\\'" . web-mode))
-
-(defun my-web-mode-hook ()
-  "Hooks for Web mode."
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-style-padding 1)
-  (setq web-mode-script-padding 1)
-  (setq web-mode-block-padding 0)
-  (setq web-mode-enable-current-element-highlight t)
-;;  (setq web-mode-enable-current-column-highlight t)
-  (setq web-mode-enable-auto-pairing t)
-  (setq web-mode-enable-css-colorization t)
-  (setq web-mode-enable-block-face t)
-  (set-face-attribute 'web-mode-css-rule-face nil :foreground "Pink3")
-  (setq web-mode-extra-snippets
-      '(("erb" . (("toto" . "<% toto | %>\n\n<% end %>")))
-        ("php" . (("dowhile" . "<?php do { ?>\n\n<?php } while (|); ?>")
-                  ("debug" . "<?php error_log(__LINE__); ?>")))
-       ))
-(setq web-mode-extra-auto-pairs '(("erb" . (("open" "close")))
-                                  ))
-  (setq web-mode-content-types-alist
-  '(("json" . "/some/path/.*\\.api\\'")
-    ("xml"  . "/other/path/.*\\.api\\'")
-    ("jsx"  . "/some/react/path/.*\\.js[x]?\\'")))
-(define-key web-mode-map (kbd "C-n") 'web-mode-tag-match)
-    )
-
-(setq web-mode-enable-current-element-highlight t)
-
-(add-hook 'web-mode-hook  'my-web-mode-hook)
-(add-hook 'web-mode-hook  'emmet-mode)
-
-;;; JS
-
-(require 'js2-mode)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-
-;; Better imenu
-;(add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
-
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
-(eval-after-load 'tern
-   '(progn
-      (require 'tern-auto-complete)
-      (tern-ac-setup)))
-
-;;; LSP-MODE
-
-(require 'lsp-mode)
-(use-package lsp-mode
-  :commands lsp)
-
-;; for completions
-(use-package company-lsp
-  :after lsp-mode
-  :config (push 'company-lsp company-backends))
-
-(use-package vue-mode
-  :mode "\\.vue\\'"
-  :config
-  (add-hook 'vue-mode-hook #'lsp))
-  
-(add-hook 'mmm-mode-hook
-		  (lambda () 
-		    (set-face-background 'mmm-default-submode-face nil)))
-
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- 
- ;; Display the name of the current buffer in the title bar
+;; Display the name of the current buffer in the title bar
 (setq frame-title-format "GNU Emacs: %b")
 
 ;; Inhibit startup/splash screen
@@ -308,20 +189,18 @@
 ;; (setq show-paren-style 'expression)
 
 ;; Electric-modes settings
-(electric-pair-mode    1) ;; автозакрытие {},[],() с переводом курсора внутрь скобок
+(electric-pair-mode    1) 
 
 ;; Delete selection
 (delete-selection-mode t)
 
 ;; Disable GUI components
 (tooltip-mode      -1)
-(menu-bar-mode     -1) ;; отключаем графическое меню
-(tool-bar-mode     -1) ;; отключаем tool-bar
-;;(scroll-bar-mode   -1) ;; отключаем полосу прокрутки
-;;(blink-cursor-mode -1) ;; курсор не мигает
-(setq use-dialog-box     nil) ;; никаких графических диалогов и окон - все через минибуфер
-(setq redisplay-dont-pause t)  ;; лучшая отрисовка буфера
-(setq ring-bell-function 'ignore) ;; отключить звуковой сигнал
+(menu-bar-mode     -1)
+(tool-bar-mode     -1)
+(setq use-dialog-box     nil) 
+(setq redisplay-dont-pause t)  
+(setq ring-bell-function 'ignore)
 
 (setq make-backup-files        nil)
 (setq auto-save-default        nil)
@@ -374,7 +253,7 @@
 (setq lisp-indent-function  'common-lisp-indent-function)
 
 ;; Scrolling settings
-(setq scroll-margin          5) ;; сдвигать буфер верх/вниз когда курсор в 10 шагах от верхней/нижней границы  
+(setq scroll-margin          5) 
 (setq scroll-step            1
       scroll-conservatively  10000
       mouse-wheel-scroll-amount '(1 ((shift) . 1))
@@ -388,9 +267,8 @@
 (setq x-select-enable-clipboard t)
 
 ;; End of file newlines
-(setq require-final-newline    t) ;; добавить новую пустую строку в конец файла при сохранении
-(setq next-line-add-newlines nil) ;; не добавлять новую строку в конец при смещении 
-						            ;; курсора  стрелками
+(setq require-final-newline    t) 
+(setq next-line-add-newlines nil) 
 									
 ;; Highlight search resaults
 (setq search-highlight        t)
@@ -400,7 +278,21 @@
 (if (equal nil (equal major-mode 'org-mode))
     (windmove-default-keybindings 'meta))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; hot keys
+(require 'eshell)
+(require 'em-smart)
+(setq eshell-where-to-jump 'begin)
+(setq eshell-review-quick-commands nil)
+(setq eshell-smart-space-goes-to-end t)
+
+;; custom functions
+
+(defun new-shell ()
+    "creates a shell with a given name"
+    (interactive)
+    (let ((shell-name "shell"))
+    (eshell (concat "*" shell-name "*"))))
+
+;; hot keys
 
 (defvar cfg-mode-map (make-sparse-keymap))
 
@@ -463,3 +355,152 @@ cfg-mode-map)
 (add-hook 'minibuffer-setup-hook 'turn-off-cfg-mode)
 (cfg:cfg-hotheys cfg-mode-map)
 (global-cfg-mode))
+
+
+;; Specific
+
+;; golang
+
+(require 'company)
+(require 'flycheck)
+(require 'yasnippet)
+(require 'go-eldoc)
+(require 'company-go)
+
+(add-hook 'before-save-hook 'gofmt-before-save)
+(setq-default gofmt-command "goimports")
+(add-hook 'go-mode-hook 'go-eldoc-setup)
+(add-hook 'go-mode-hook (lambda ()
+                            (set (make-local-variable 'company-backends) '(company-go))
+                            (company-mode)))
+(add-hook 'go-mode-hook 'yas-minor-mode)
+(add-hook 'go-mode-hook 'flycheck-mode)
+
+(require 'go-eldoc)
+(add-hook 'go-mode-hook 'go-eldoc-setup)
+
+(require 'yasnippet)
+(yas-reload-all)
+(add-hook 'go-mode-hook 'yas-minor-mode)
+
+;; C#
+
+(autoload 'csharp-mode "csharp-mode" "Major mode for editing C# code." t)
+(setq auto-mode-alist
+      (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
+
+(defun my-csharp-mode-fn ()
+  (turn-on-auto-revert-mode)
+  (setq indent-tabs-mode nil)
+  )
+
+(add-hook  'csharp-mode-hook 'my-csharp-mode-fn t)
+
+(eval-after-load 'company
+  '(progn
+     (define-key company-active-map (kbd "\c-n") 'company-select-next)
+     (define-key company-active-map [control n] 'company-select-next)
+     (define-key company-active-map (kbd "\c-p") 'company-select-previous)
+     (define-key company-active-map [control p] 'company-select-previous)
+     )
+  )
+
+(eval-after-load 'company
+  '(add-to-list 'company-backends #'company-omnisharp))
+
+(require 'csharp-mode)
+(add-hook 'csharp-mode-hook
+	  '(lambda()
+	     (setq comment-column 40)
+	     (setq c-basic-offset 4)
+	    (flycheck-mode)
+        (omnisharp-mode)
+        (company-mode)
+        (omnisharp-start-omnisharp-server)
+	     )
+	      )
+
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-omnisharp)
+  )
+ 
+;; Web-mode
+
+ 
+(require 'web-mode)
+	
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.api\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("/some/react/path/.*\\.js[x]?\\'" . web-mode))
+
+(defun my-web-mode-hook ()
+  "Hooks for Web mode."
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-style-padding 1)
+  (setq web-mode-script-padding 1)
+  (setq web-mode-block-padding 0)
+  (setq web-mode-enable-current-element-highlight t)
+  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-css-colorization t)
+  (setq web-mode-enable-block-face t)
+  (set-face-attribute 'web-mode-css-rule-face nil :foreground "Pink3")
+  (setq web-mode-extra-snippets
+      '(("erb" . (("toto" . "<% toto | %>\n\n<% end %>")))
+        ("php" . (("dowhile" . "<?php do { ?>\n\n<?php } while (|); ?>")
+                  ("debug" . "<?php error_log(__LINE__); ?>")))
+       ))
+(setq web-mode-extra-auto-pairs '(("erb" . (("open" "close")))
+                                  ))
+  (setq web-mode-content-types-alist
+  '(("json" . "/some/path/.*\\.api\\'")
+    ("xml"  . "/other/path/.*\\.api\\'")
+    ("jsx"  . "/some/react/path/.*\\.js[x]?\\'")))
+(define-key web-mode-map (kbd "C-n") 'web-mode-tag-match)
+    )
+
+(setq web-mode-enable-current-element-highlight t)
+
+(add-hook 'web-mode-hook  'my-web-mode-hook)
+(add-hook 'web-mode-hook  'emmet-mode)
+
+;; JS
+
+
+(require 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+(eval-after-load 'tern
+   '(progn
+      (require 'tern-auto-complete)
+      (tern-ac-setup)))
+
+;; LSP-MODE
+
+(require 'lsp-mode)
+(use-package lsp-mode
+  :commands lsp)
+
+;; for completions
+(use-package company-lsp
+  :after lsp-mode
+  :config (push 'company-lsp company-backends))
+
+(use-package vue-mode
+  :mode "\\.vue\\'"
+  :config
+  (add-hook 'vue-mode-hook #'lsp))
+  
+(add-hook 'mmm-mode-hook
+		  (lambda () 
+		    (set-face-background 'mmm-default-submode-face nil)))
+ 
