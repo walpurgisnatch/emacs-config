@@ -42,19 +42,26 @@
                             auto-complete
                             web-mode
                             js2-mode
-                            lsp-mode
                             flymake
-                            company-lsp
                             use-package
-                            omnisharp
-                            csharp-mode
-                            vue-mode
-                            emmet-mode
-                            company
                             flycheck
                             yasnippet
                             go-eldoc
-                            company-go))
+                            company-go
+                            flymake-ruby
+                            inf-ruby
+                            helm
+                            helm-projectile
+                            helm-ag
+                            projectile
+                            projectile-rails
+                            robe
+                            company
+                            rvm
+                            seeing-is-believing
+                            chruby
+                            ruby-test-mode
+                            rinari))
 
 (defun packages-installed-p ()
   (loop for package in required-packages
@@ -137,7 +144,7 @@
      ("gnu" . "https://elpa.gnu.org/packages/"))))
  '(package-selected-packages
    (quote
-    (go-mode php-mode neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime)))
+    (rinari go-mode php-mode neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime)))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(powerline-color1 "#1E1E1E")
@@ -183,6 +190,7 @@
 
 ;; Inhibit startup/splash screen
 (setq inhibit-splash-screen   t)
+(setq initial-scratch-message nil)
 (setq ingibit-startup-message t)
 
 ;; (show-paren-mode t) ;; включить выделение выражений между {},[],()
@@ -303,15 +311,16 @@
 (define-key cfg-mode-map (kbd "M-j") 'backward-word)
 (define-key cfg-mode-map (kbd "C-j") 'backward-char)
 (define-key cfg-mode-map (kbd "C-u") 'kill-line)
-(define-key cfg-mode-map (kbd "C-o") 'beginning-of-defun)
-(define-key cfg-mode-map (kbd "C-p") 'end-of-defun)
+(define-key cfg-mode-map (kbd "C-o") 'other-window)
+(define-key cfg-mode-map (kbd "C-p") 'beginning-of-defun)
+(define-key cfg-mode-map (kbd "C-n") 'end-of-defun)
 (define-key cfg-mode-map (kbd "C-b") 'kill-buffer)
-;(define-key cfg-mode-map (kbd "TAB") 'insert-tab-char)
+(define-key cfg-mode-map (kbd "<tab>") 'insert-tab-char)
 
 (defun insert-tab-char ()
 "Insert a tab char. (ASCII 9, \t)"
 (interactive)
-(insert "\t"))
+(insert "    "))
 
 (define-minor-mode cfg-mode
 "cfg-mode"
@@ -413,46 +422,6 @@ cfg-mode-map)
 (yas-reload-all)
 (add-hook 'go-mode-hook 'yas-minor-mode)
 
-;; C#
-
-(autoload 'csharp-mode "csharp-mode" "Major mode for editing C# code." t)
-(setq auto-mode-alist
-      (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
-
-(defun my-csharp-mode-fn ()
-  (turn-on-auto-revert-mode)
-  (setq indent-tabs-mode nil)
-  )
-
-(add-hook  'csharp-mode-hook 'my-csharp-mode-fn t)
-
-(eval-after-load 'company
-  '(progn
-     (define-key company-active-map (kbd "\c-n") 'company-select-next)
-     (define-key company-active-map [control n] 'company-select-next)
-     (define-key company-active-map (kbd "\c-p") 'company-select-previous)
-     (define-key company-active-map [control p] 'company-select-previous)
-     )
-  )
-
-(eval-after-load 'company
-  '(add-to-list 'company-backends #'company-omnisharp))
-
-(require 'csharp-mode)
-(add-hook 'csharp-mode-hook
-	  '(lambda()
-	     (setq comment-column 40)
-	     (setq c-basic-offset 4)
-	    (flycheck-mode)
-        (omnisharp-mode)
-        (company-mode)
-        (omnisharp-start-omnisharp-server)
-	     )
-	      )
-
-(eval-after-load 'company
-  '(add-to-list 'company-backends 'company-omnisharp)
-  )
  
 ;; Web-mode
 
@@ -484,7 +453,7 @@ cfg-mode-map)
   (setq web-mode-enable-block-face t)
   (set-face-attribute 'web-mode-css-rule-face nil :foreground "Pink3")
   (setq web-mode-extra-snippets
-      '(("erb" . (("toto" . "<% toto | %>\n\n<% end %>")))
+      '(("erb" . (("toto" . "<% toto | %\n\n<% end %")))
         ("php" . (("dowhile" . "<?php do { ?>\n\n<?php } while (|); ?>")
                   ("debug" . "<?php error_log(__LINE__); ?>")))
        ))
@@ -514,23 +483,48 @@ cfg-mode-map)
       (require 'tern-auto-complete)
       (tern-ac-setup)))
 
-;; LSP-MODE
+;; RUBY MODE
 
-(require 'lsp-mode)
-(use-package lsp-mode
-  :commands lsp)
+(add-to-list 'auto-mode-alist
+             '("\\.\\(?:cap\\|gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mo))
+(add-to-list 'auto-mode-alist
+             '("\\(?:Brewfile\\|Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|[rR]akefile\\)\\'" . ruby-mode))
 
-;; for completions
-(use-package company-lsp
-  :after lsp-mode
-  :config (push 'company-lsp company-backends))
+(add-hook 'find-file-hook
+          (lambda ()
+            (when (string= (file-name-extension buffer-file-name) "erb")
+              (rinari-minor-mode +1))))
 
-(use-package vue-mode
-  :mode "\\.vue\\'"
-  :config
-  (add-hook 'vue-mode-hook #'lsp))
-  
-(add-hook 'mmm-mode-hook
-		  (lambda () 
-		    (set-face-background 'mmm-default-submode-face nil)))
- 
+(rvm-use-default)
+
+(autoload 'inf-ruby-minor-mode "inf-ruby" "Run an inferior Ruby process" t)
+(add-hook 'ruby-mode-hook 'ruby-test-mode)
+(add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)
+(add-hook 'ruby-mode-hook 'flymake-ruby-load)
+(add-hook 'ruby-mode-hook 'robe-mode)
+(add-hook 'ruby-mode-hook 'rinari-minor-mode)
+
+(setq seeing-is-believing-prefix "C-.")
+(add-hook 'ruby-mode-hook 'seeing-is-believing)
+(require 'seeing-is-believing)
+
+(global-company-mode t)
+(push 'company-robe company-backends)
+
+(setq ruby-deep-indent-paren nil)
+
+(global-set-key (kbd "C-c r r") 'inf-ruby)
+(global-set-key (kbd "C-c r a") 'rvm-activate-corresponding-ruby)
+(global-set-key (kbd "M-x") #'helm-M-x)
+(global-set-key (kbd "s-f") #'helm-projectile-ag)
+(global-set-key (kbd "s-t") #'helm-projectile-find-file-dwim)
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+(add-hook 'compilation-finish-functions
+          (lambda (buf strg)
+            (switch-to-buffer-other-window "*compilation*")
+            (read-only-mode)
+            (goto-char (point-max))
+            (local-set-key (kbd "q")
+                           (lambda () (interactive) (quit-restore-window)))))
