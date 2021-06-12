@@ -4,6 +4,8 @@
   (string-equal system-type "windows-nt"))
 
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+(load (expand-file-name "~/.roswell/helper.el"))
+(setq inferior-lisp-program "ros -Q run")
 
 ;; MS Windows path-variable
 (when (system-is-windows)
