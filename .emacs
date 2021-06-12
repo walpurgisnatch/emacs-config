@@ -12,8 +12,7 @@
     (setq win-init-ct-path      "C:/.emacs.d/plugins/color-theme")
     (setq win-init-ac-path      "C:/.emacs.d/plugins/auto-complete")
     (setq win-init-ac-dict-path "C:/.emacs.d/plugins/auto-complete/dict")
-    (add-to-list 'custom-theme-load-path win-init-ct-path)
-    (add-to-list 'load-path win-init-pl-path))
+    (add-to-list 'custom-theme-load-path win-init-ct-path))
 
 ;; Unix path-variableo
 (when (system-is-linux)
