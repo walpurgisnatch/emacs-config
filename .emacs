@@ -62,7 +62,9 @@
                             seeing-is-believing
                             chruby
                             ruby-test-mode
-                            rinari))
+                            rinari
+			    neotree
+			    tern))
 
 (defun packages-installed-p ()
   (loop for package in required-packages
