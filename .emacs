@@ -107,6 +107,13 @@
 
 (setq-default lisp-body-indent 2)
 (setq-default lisp-indent-function 'common-lisp-indent-function)
+(global-prettify-symbols-mode 1)
+(defun my-prettify-hook ()
+    (setq prettify-symbols-alist
+          '(("lambda" . 955)            ; λ
+            ("->" . 8594)               ; →
+            ("=>" . 8658))))            ; ⇒
+(add-hook 'lisp-mode-hook 'my-prettify-hook)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -223,7 +230,8 @@
         (setq file-name-coding-system           'utf-8)
         (set-selection-coding-system            'utf-8)
         (set-keyboard-coding-system        'utf-8-unix)
-        (set-terminal-coding-system             'utf-8)
+	(set-terminal-coding-system             'utf-16-le)
+        (set-clipboard-coding-system            'utf-16-le)
         (prefer-coding-system                   'utf-8))
 		
 ;; Linum plugin
