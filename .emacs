@@ -107,8 +107,6 @@
                  slime-indentation))
   (setq-default slime-net-coding-system 'utf-8-unix))
 
-(setq-default lisp-body-indent 2)
-(setq-default lisp-indent-function 'common-lisp-indent-function)
 (global-prettify-symbols-mode 1)
 (defun my-prettify-hook ()
     (setq prettify-symbols-alist
@@ -267,7 +265,7 @@
 (setq-default tab-width          4) ;; ширина табуляции - 4 пробельных символа
 (setq-default c-basic-offset     4)
 (setq-default standart-indent    4) ;; стандартная ширина отступа - 4 пробельных символа
-(setq-default lisp-body-indent   4) ;; сдвигать Lisp-выражения на 4 пробельных символа
+(setq-default lisp-body-indent   2) ;; сдвигать Lisp-выражения на 4 пробельных символа
 (global-set-key (kbd "RET") 'newline-and-indent) ;; при нажатии Enter перевести каретку и сделать отступ
 (setq lisp-indent-function  'common-lisp-indent-function)
 
