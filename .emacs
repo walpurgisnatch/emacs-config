@@ -29,7 +29,7 @@
 (push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
 
 (require 'cl)
-(setq-default inferior-lisp-program "sbcl")
+;(setq-default inferior-lisp-program "sbcl")
 ;; Package manager:
 ;; Initialise package and add Melpa repository
 (require 'package)
