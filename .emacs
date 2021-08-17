@@ -324,7 +324,7 @@
 (define-key cfg-mode-map (kbd "C-p") 'beginning-of-defun)
 (define-key cfg-mode-map (kbd "C-n") 'end-of-defun)
 (define-key cfg-mode-map (kbd "C-b") 'kill-buffer)
-(define-key cfg-mode-map (kbd "<tab>") 'insert-tab-char)
+(define-key cfg-mode-map (kbd "<tab>") 'indent-relative)
 
 (defun insert-tab-char ()
 "Insert a tab char. (ASCII 9, \t)"
