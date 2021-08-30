@@ -29,7 +29,6 @@
 (push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
 
 (require 'cl)
-;(setq-default inferior-lisp-program "sbcl")
 ;; Package manager:
 ;; Initialise package and add Melpa repository
 (require 'package)
@@ -62,9 +61,9 @@
                             seeing-is-believing
                             chruby
                             ruby-test-mode
-                            rinari
 			    neotree
-			    tern))
+			    tern
+                            rinari))
 
 (defun packages-installed-p ()
   (loop for package in required-packages
@@ -107,13 +106,6 @@
                  slime-indentation))
   (setq-default slime-net-coding-system 'utf-8-unix))
 
-(global-prettify-symbols-mode 1)
-(defun my-prettify-hook ()
-    (setq prettify-symbols-alist
-          '(("lambda" . 955)            ; λ
-            ("->" . 8594)               ; →
-            ("=>" . 8658))))            ; ⇒
-(add-hook 'lisp-mode-hook 'my-prettify-hook)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -122,45 +114,40 @@
  '(Linum-format "%7i ")
  '(ansi-color-names-vector
    ["#000000" "#8b0000" "#00ff00" "#ffa500" "#7b68ee" "#dc8cc3" "#93e0e3" "#dcdccc"])
- '(compilation-message-face (quote default))
- '(custom-enabled-themes (quote (cyberpunk)))
+ '(compilation-message-face 'default)
+ '(custom-enabled-themes '(cyberpunk))
  '(custom-safe-themes
-   (quote
-    ("687e997f50a47c647c5132f0671df27b8a3ff4f18e31210dc53abeaa7ea8cde3" "86e74c4c42677b593d1fab0a548606e7ef740433529b40232774fbb6bc22c048" "94146ac747852749e9444b184eb1e958f0e546072f66743929a05c3af62de473" "4e839b24f87c529e837535d0a7880f40ac3867b6e3e73a2cf2bb40bab53d4658" "5adf7ad078568675387aac96e142c1300006531721bca35b941e4ed3e3b59000" default)))
+   '("687e997f50a47c647c5132f0671df27b8a3ff4f18e31210dc53abeaa7ea8cde3" "86e74c4c42677b593d1fab0a548606e7ef740433529b40232774fbb6bc22c048" "94146ac747852749e9444b184eb1e958f0e546072f66743929a05c3af62de473" "4e839b24f87c529e837535d0a7880f40ac3867b6e3e73a2cf2bb40bab53d4658" "5adf7ad078568675387aac96e142c1300006531721bca35b941e4ed3e3b59000" default))
  '(fci-rule-character-color "#202020")
  '(fci-rule-color "#383838")
  '(fringe-mode 4 nil (fringe))
- '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
+ '(highlight-changes-colors '("#FD5FF0" "#AE81FF"))
  '(highlight-tail-colors
-   (quote
-    (("#3C3D37" . 0)
+   '(("#3C3D37" . 0)
      ("#679A01" . 20)
      ("#4BBEAE" . 30)
      ("#1DB4D0" . 50)
      ("#9A8F21" . 60)
      ("#A75B00" . 70)
      ("#F309DF" . 85)
-     ("#3C3D37" . 100))))
+     ("#3C3D37" . 100)))
  '(magit-diff-use-overlays nil)
  '(main-line-color1 "#1E1E1E")
  '(main-line-color2 "#111111")
- '(main-line-separator-style (quote chamfer))
+ '(main-line-separator-style 'chamfer)
  '(package-archives
-   (quote
-    (("melpa" . "http://melpa.org/packages/")
+   '(("melpa" . "http://melpa.org/packages/")
      ("melpa-stable" . "https://stable.melpa.org/packages/")
-     ("gnu" . "https://elpa.gnu.org/packages/"))))
+     ("gnu" . "https://elpa.gnu.org/packages/")))
  '(package-selected-packages
-   (quote
-    (rinari go-mode php-mode neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime)))
+   '(markdown-mode rinari go-mode php-mode neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(powerline-color1 "#1E1E1E")
  '(powerline-color2 "#111111")
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
-   (quote
-    ((20 . "#F92672")
+   '((20 . "#F92672")
      (40 . "#CF4F1F")
      (60 . "#C26C0F")
      (80 . "#E6DB74")
@@ -177,11 +164,10 @@
      (300 . "#299BA6")
      (320 . "#2896B5")
      (340 . "#2790C3")
-     (360 . "#66D9EF"))))
+     (360 . "#66D9EF")))
  '(vc-annotate-very-old-color nil)
  '(weechat-color-list
-   (quote
-    (unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0"))))
+   '(unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -230,8 +216,8 @@
         (setq file-name-coding-system           'utf-8)
         (set-selection-coding-system            'utf-8)
         (set-keyboard-coding-system        'utf-8-unix)
-	(set-terminal-coding-system             'utf-16-le)
-        (set-clipboard-coding-system            'utf-16-le)
+        (set-terminal-coding-system             'utf-8)
+        (set-clipboard-coding-system            'utf-8)
         (prefer-coding-system                   'utf-8))
 		
 ;; Linum plugin
@@ -268,6 +254,21 @@
 (setq-default lisp-body-indent   2) ;; сдвигать Lisp-выражения на 4 пробельных символа
 (global-set-key (kbd "RET") 'newline-and-indent) ;; при нажатии Enter перевести каретку и сделать отступ
 (setq lisp-indent-function  'common-lisp-indent-function)
+
+;; Prettify
+(global-prettify-symbols-mode +1)
+(defun my-prettify-hook ()
+    (setq prettify-symbols-alist
+          '(("lambda"     . 955)                ; λ
+            ("->"         . 129062)             ; 🠦
+            ("=>"         . 10233)              ; ⟹
+            ("/="         . 8800)               ; ≠
+            ;("map"        . 10236)              ; ⟼
+            ("integral"   . 8747)               ; ∫
+            ("summation"  . 8721)               ; ∑
+            )))
+(add-hook 'lisp-mode-hook 'my-prettify-hook)
+(add-hook 'ruby-mode-hook 'my-prettify-hook)
 
 ;; Scrolling settings
 (setq scroll-margin          5) 
@@ -324,18 +325,19 @@
 (define-key cfg-mode-map (kbd "C-p") 'beginning-of-defun)
 (define-key cfg-mode-map (kbd "C-n") 'end-of-defun)
 (define-key cfg-mode-map (kbd "C-b") 'kill-buffer)
+(define-key cfg-mode-map (kbd "C-f") 'eval-print-last-sexp)
 (define-key cfg-mode-map (kbd "<tab>") 'indent-relative)
 
 (defun insert-tab-char ()
-"Insert a tab char. (ASCII 9, \t)"
-(interactive)
-(insert "    "))
+  "Insert a tab char. (ASCII 9, \t)"
+  (interactive)
+  (insert "    "))
 
 (define-minor-mode cfg-mode
-"cfg-mode"
-t
-" cfg"
-cfg-mode-map)
+  "cfg-mode"
+  t
+  " cfg"
+  cfg-mode-map)
 
 (defadvice load (after cfg-keybindings-priority)
 (if (not (eq (car (car minor-mode-map-alist)) 'cfg-mode))
