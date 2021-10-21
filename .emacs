@@ -61,9 +61,11 @@
                             seeing-is-believing
                             chruby
                             ruby-test-mode
-			    neotree
-			    tern
-                            rinari))
+                            neotree
+                            tern
+                            rinari
+                            reverse-im
+                            multiple-cursors))
 
 (defun packages-installed-p ()
   (loop for package in required-packages
@@ -140,7 +142,7 @@
      ("melpa-stable" . "https://stable.melpa.org/packages/")
      ("gnu" . "https://elpa.gnu.org/packages/")))
  '(package-selected-packages
-   '(markdown-mode rinari go-mode php-mode neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime))
+   '(multiple-cursors yaml-mode reverse-im yaml markdown-mode rinari go-mode php-mode neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(powerline-color1 "#1E1E1E")
@@ -219,6 +221,13 @@
         (set-terminal-coding-system             'utf-8)
         (set-clipboard-coding-system            'utf-8)
         (prefer-coding-system                   'utf-8))
+
+(use-package reverse-im
+  :ensure t
+  :custom
+  (reverse-im-input-methods '("russian-computer"))
+  :config
+  (reverse-im-mode t))
 		
 ;; Linum plugin
 (require 'linum) ;; вызвать Linum
@@ -247,12 +256,12 @@
 (global-set-key (kbd "<f2>") 'bs-show) ;; запуск buffer selection кнопкой F2
 		
 ;; Indent settings
-(setq-default indent-tabs-mode nil) ;; возможность ставить отступы TAB'ом
-(setq-default tab-width          4) ;; ширина табуляции - 4 пробельных символа
+(setq-default indent-tabs-mode nil) 
+(setq-default tab-width          4) 
 (setq-default c-basic-offset     4)
-(setq-default standart-indent    4) ;; стандартная ширина отступа - 4 пробельных символа
-(setq-default lisp-body-indent   2) ;; сдвигать Lisp-выражения на 4 пробельных символа
-(global-set-key (kbd "RET") 'newline-and-indent) ;; при нажатии Enter перевести каретку и сделать отступ
+(setq-default standart-indent    4) 
+(setq-default lisp-body-indent   2) 
+(global-set-key (kbd "RET") 'newline-and-indent) 
 (setq lisp-indent-function  'common-lisp-indent-function)
 
 ;; Prettify
@@ -326,6 +335,8 @@
 (define-key cfg-mode-map (kbd "C-n") 'end-of-defun)
 (define-key cfg-mode-map (kbd "C-b") 'kill-buffer)
 (define-key cfg-mode-map (kbd "C-f") 'eval-print-last-sexp)
+(define-key cfg-mode-map (kbd "C-h") 'universal-argument)
+(define-key cfg-mode-map (kbd "C-c m c") 'mc/edit-lines)
 (define-key cfg-mode-map (kbd "<tab>") 'indent-relative)
 
 (defun insert-tab-char ()
