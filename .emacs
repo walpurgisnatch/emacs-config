@@ -564,7 +564,7 @@
 (defun rjsx-hook ()
   (setq js-indent-level 2))
   
-(add-hook 'rjsx-mode 'emmet-mode)
+(add-hook 'rjsx-mode-hook 'emmet-mode)
 
 ;; (defun web-mode-init-prettier-hook ()
 ;;   (add-node-modules-path)
