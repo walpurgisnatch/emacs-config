@@ -9,22 +9,22 @@
 
 ;; MS Windows path-variable
 (when (system-is-windows)
-    (setq win-sbcl-exe          "C:/sbcl/sbcl.exe")
-    (setq win-init-path         "C:/.emacs.d")
-    (setq win-init-ct-path      "C:/.emacs.d/plugins/color-theme")
-    (setq win-init-ac-path      "C:/.emacs.d/plugins/auto-complete")
-    (setq win-init-ac-dict-path "C:/.emacs.d/plugins/auto-complete/dict")
-    (add-to-list 'custom-theme-load-path win-init-ct-path))
+  (setq win-sbcl-exe          "C:/sbcl/sbcl.exe")
+  (setq win-init-path         "C:/.emacs.d")
+  (setq win-init-ct-path      "C:/.emacs.d/plugins/color-theme")
+  (setq win-init-ac-path      "C:/.emacs.d/plugins/auto-complete")
+  (setq win-init-ac-dict-path "C:/.emacs.d/plugins/auto-complete/dict")
+  (add-to-list 'custom-theme-load-path win-init-ct-path))
 
 ;; Unix path-variableo
 (when (system-is-linux)
-    (setq unix-sbcl-bin          "/usr/bin/sbcl")
-    (setq unix-init-path         "~/.emacs.d")
-    (setq unix-init-ct-path      "~/.emacs.d/plugins/color-theme")
-    (setq unix-init-ac-path      "~/.emacs.d/plugins/auto-complete")
-    (setq unix-init-slime-path   "/usr/share/common-lisp/source/slime/")
-    (setq unix-init-ac-dict-path "~/.emacs.d/plugins/auto-complete/dict")
-    (add-to-list 'custom-theme-load-path unix-init-ct-path))
+  (setq unix-sbcl-bin          "/usr/bin/sbcl")
+  (setq unix-init-path         "~/.emacs.d")
+  (setq unix-init-ct-path      "~/.emacs.d/plugins/color-theme")
+  (setq unix-init-ac-path      "~/.emacs.d/plugins/auto-complete")
+  (setq unix-init-slime-path   "/usr/share/common-lisp/source/slime/")
+  (setq unix-init-ac-dict-path "~/.emacs.d/plugins/auto-complete/dict")
+  (add-to-list 'custom-theme-load-path unix-init-ct-path))
 
 (push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
 
@@ -40,11 +40,23 @@
 (defvar required-packages '(slime
                             smartparens
                             auto-complete
+                            
                             web-mode
                             js2-mode
-                            flymake
-                            use-package
+                            lsp-mode
                             flycheck
+                            lsp-treemacs
+                            helm-lsp
+                            hydra
+                            flymake
+                            avy
+                            which-key
+                            helm-xref
+                            dap-mode
+                            json-mode
+                            add-node-modules-path
+                            
+                            use-package
                             yasnippet
                             go-eldoc
                             company-go
@@ -65,7 +77,8 @@
                             tern
                             rinari
                             reverse-im
-                            multiple-cursors))
+                            multiple-cursors
+                            telega))
 
 (defun packages-installed-p ()
   (loop for package in required-packages
@@ -142,7 +155,7 @@
      ("melpa-stable" . "https://stable.melpa.org/packages/")
      ("gnu" . "https://elpa.gnu.org/packages/")))
  '(package-selected-packages
-   '(multiple-cursors yaml-mode reverse-im yaml markdown-mode rinari go-mode php-mode neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime))
+   '(telega helm-tramp docker-tramp docker emmet-mode slim-mode multiple-cursors yaml-mode reverse-im yaml markdown-mode rinari go-mode php-mode neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(powerline-color1 "#1E1E1E")
@@ -176,6 +189,15 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(js2-warning ((t nil))))
+
+(define-key global-map (kbd "C-c t") telega-prefix-map)
+
+(helm-mode)
+(require 'helm-xref)
+(define-key global-map [remap find-file] #'helm-find-files)
+(define-key global-map [remap execute-extended-command] #'helm-M-x)
+(define-key global-map [remap switch-to-buffer] #'helm-mini)
+(which-key-mode)
  
 ;; Dired
 (require 'dired)
@@ -495,15 +517,46 @@
 
 ;; JS
 
+;; (require 'js2-mode)
+;; (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
-(require 'js2-mode)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+;; (add-hook 'js-mode-hook (lambda () (tern-mode t)))
+;; (eval-after-load 'tern
+;;    '(progn
+;;       (require 'tern-auto-complete)
+;;      (tern-ac-setup)))
 
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
-(eval-after-load 'tern
-   '(progn
-      (require 'tern-auto-complete)
-      (tern-ac-setup)))
+;; React mode
+
+
+(add-hook 'prog-mode-hook #'lsp)
+(setq gc-cons-threshold (* 100 1024 1024)
+      read-process-output-max (* 1024 1024)
+      company-idle-delay 0.0
+      company-minimum-prefix-length 1
+      create-lockfiles nil) ;; lock files will kill `npm start'
+(with-eval-after-load 'lsp-mode
+  (require 'dap-chrome)
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+  (yas-global-mode))
+
+(require 'flycheck)
+(setq-default flycheck-disabled-checkers
+              (append flycheck-disabled-checkers
+                      '(javascript-jshint json-jsonlist)))
+
+;; Enable eslint checker for web-mode
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+;; Enable flycheck globally
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(add-hook 'flycheck-mode-hook 'add-node-modules-path)
+
+;; (defun web-mode-init-prettier-hook ()
+;;   (add-node-modules-path)
+;;   (prettier-js-mode))
+
+;; (add-hook 'web-mode-hook  'web-mode-init-prettier-hook)
+
 
 ;; RUBY MODE
 
@@ -550,3 +603,4 @@
             (goto-char (point-max))
             (local-set-key (kbd "q")
                            (lambda () (interactive) (quit-restore-window)))))
+
