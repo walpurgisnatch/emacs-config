@@ -146,6 +146,8 @@
      ("#A75B00" . 70)
      ("#F309DF" . 85)
      ("#3C3D37" . 100)))
+ '(ispell-dictionary nil)
+ '(js-indent-level 2)
  '(magit-diff-use-overlays nil)
  '(main-line-color1 "#1E1E1E")
  '(main-line-color2 "#111111")
@@ -155,7 +157,7 @@
      ("melpa-stable" . "https://stable.melpa.org/packages/")
      ("gnu" . "https://elpa.gnu.org/packages/")))
  '(package-selected-packages
-   '(telega helm-tramp docker-tramp docker emmet-mode slim-mode multiple-cursors yaml-mode reverse-im yaml markdown-mode rinari go-mode php-mode neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime))
+   '(rjsx-mode prettier-js telega helm-tramp docker-tramp docker emmet-mode slim-mode multiple-cursors yaml-mode reverse-im yaml markdown-mode rinari go-mode php-mode neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(powerline-color1 "#1E1E1E")
@@ -528,7 +530,6 @@
 
 ;; React mode
 
-
 (add-hook 'prog-mode-hook #'lsp)
 (setq gc-cons-threshold (* 100 1024 1024)
       read-process-output-max (* 1024 1024)
@@ -545,11 +546,25 @@
               (append flycheck-disabled-checkers
                       '(javascript-jshint json-jsonlist)))
 
+(defadvice js-jsx-indent-line (after js-jsx-indent-line-after-hack activate)
+  "Workaround sgml-mode and follow airbnb component style."
+  (save-excursion
+    (beginning-of-line)
+    (if (looking-at-p "^ +\/?> *$")
+        (delete-char sgml-basic-offset))))
+
 ;; Enable eslint checker for web-mode
 (flycheck-add-mode 'javascript-eslint 'web-mode)
 ;; Enable flycheck globally
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'flycheck-mode-hook 'add-node-modules-path)
+
+(add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))
+
+(defun rjsx-hook ()
+  (setq js-indent-level 2))
+  
+(add-hook 'rjsx-mode 'emmet-mode)
 
 ;; (defun web-mode-init-prettier-hook ()
 ;;   (add-node-modules-path)
