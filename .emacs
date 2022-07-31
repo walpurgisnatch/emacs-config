@@ -240,6 +240,12 @@
 (setq auto-save-default        nil)
 (setq auto-save-list-file-name nil)
 
+(require 'org)
+(setq org-agenda-files '("~/notes/work.org"))
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-log-done t)
+
 ;; Coding-system settings
 (set-language-environment 'UTF-8)
 (progn
@@ -359,7 +365,7 @@
 (define-key cfg-mode-map (kbd "M-l") 'forward-word)
 (define-key cfg-mode-map (kbd "M-j") 'backward-word)
 (define-key cfg-mode-map (kbd "C-j") 'backward-char)
-(define-key cfg-mode-map (kbd "C-u") 'kill-line)
+(define-key cfg-mode-map (kbd "C-;") 'kill-line)
 (define-key cfg-mode-map (kbd "C-o") 'other-window)
 (define-key cfg-mode-map (kbd "C-p") 'beginning-of-defun)
 (define-key cfg-mode-map (kbd "C-n") 'end-of-defun)
@@ -542,10 +548,10 @@
       company-idle-delay 0.0
       company-minimum-prefix-length 1
       create-lockfiles nil) ;; lock files will kill `npm start'
-(with-eval-after-load 'lsp-mode
-  (require 'dap-chrome)
-  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-  (yas-global-mode))
+;; (with-eval-after-load 'lsp-mode
+;;   (require 'dap-chrome)
+;;   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+;;   (yas-global-mode))
 
 (require 'flycheck)
 (setq-default flycheck-disabled-checkers
