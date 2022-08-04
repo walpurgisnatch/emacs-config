@@ -129,47 +129,42 @@
  '(Linum-format "%7i ")
  '(ansi-color-names-vector
    ["#000000" "#8b0000" "#00ff00" "#ffa500" "#7b68ee" "#dc8cc3" "#93e0e3" "#dcdccc"])
- '(compilation-message-face (quote default))
- '(custom-enabled-themes (quote (cyberpunk)))
+ '(compilation-message-face 'default)
+ '(custom-enabled-themes '(cyberpunk))
  '(custom-safe-themes
-   (quote
-    ("687e997f50a47c647c5132f0671df27b8a3ff4f18e31210dc53abeaa7ea8cde3" "86e74c4c42677b593d1fab0a548606e7ef740433529b40232774fbb6bc22c048" "94146ac747852749e9444b184eb1e958f0e546072f66743929a05c3af62de473" "4e839b24f87c529e837535d0a7880f40ac3867b6e3e73a2cf2bb40bab53d4658" "5adf7ad078568675387aac96e142c1300006531721bca35b941e4ed3e3b59000" default)))
+   '("687e997f50a47c647c5132f0671df27b8a3ff4f18e31210dc53abeaa7ea8cde3" "86e74c4c42677b593d1fab0a548606e7ef740433529b40232774fbb6bc22c048" "94146ac747852749e9444b184eb1e958f0e546072f66743929a05c3af62de473" "4e839b24f87c529e837535d0a7880f40ac3867b6e3e73a2cf2bb40bab53d4658" "5adf7ad078568675387aac96e142c1300006531721bca35b941e4ed3e3b59000" default))
  '(fci-rule-character-color "#202020")
  '(fci-rule-color "#383838")
  '(fringe-mode 4 nil (fringe))
- '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
+ '(highlight-changes-colors '("#FD5FF0" "#AE81FF"))
  '(highlight-tail-colors
-   (quote
-    (("#3C3D37" . 0)
+   '(("#3C3D37" . 0)
      ("#679A01" . 20)
      ("#4BBEAE" . 30)
      ("#1DB4D0" . 50)
      ("#9A8F21" . 60)
      ("#A75B00" . 70)
      ("#F309DF" . 85)
-     ("#3C3D37" . 100))))
+     ("#3C3D37" . 100)))
  '(ispell-dictionary nil)
  '(js-indent-level 2)
  '(magit-diff-use-overlays nil)
  '(main-line-color1 "#1E1E1E")
  '(main-line-color2 "#111111")
- '(main-line-separator-style (quote chamfer))
+ '(main-line-separator-style 'chamfer)
  '(package-archives
-   (quote
-    (("melpa" . "http://melpa.org/packages/")
+   '(("melpa" . "http://melpa.org/packages/")
      ("melpa-stable" . "https://stable.melpa.org/packages/")
-     ("gnu" . "https://elpa.gnu.org/packages/"))))
+     ("gnu" . "https://elpa.gnu.org/packages/")))
  '(package-selected-packages
-   (quote
-    (rjsx-mode prettier-js telega helm-tramp docker-tramp docker emmet-mode slim-mode multiple-cursors yaml-mode reverse-im yaml markdown-mode rinari go-mode php-mode neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime)))
+   '(rjsx-mode prettier-js telega helm-tramp docker-tramp docker emmet-mode slim-mode multiple-cursors yaml-mode reverse-im yaml markdown-mode rinari go-mode php-mode neotree ## skewer-mode mmm-mode company-lsp python-mode use-package vue-mode tern-auto-complete tern ac-js2 jsonnet-mode yasnippet lsp-mode auto-complete smartparens slime))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(powerline-color1 "#1E1E1E")
  '(powerline-color2 "#111111")
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
-   (quote
-    ((20 . "#F92672")
+   '((20 . "#F92672")
      (40 . "#CF4F1F")
      (60 . "#C26C0F")
      (80 . "#E6DB74")
@@ -186,11 +181,10 @@
      (300 . "#299BA6")
      (320 . "#2896B5")
      (340 . "#2790C3")
-     (360 . "#66D9EF"))))
+     (360 . "#66D9EF")))
  '(vc-annotate-very-old-color nil)
  '(weechat-color-list
-   (quote
-    (unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0"))))
+   '(unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -239,12 +233,6 @@
 (setq make-backup-files        nil)
 (setq auto-save-default        nil)
 (setq auto-save-list-file-name nil)
-
-(require 'org)
-(setq org-agenda-files '("~/notes/work.org"))
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
-(setq org-log-done t)
 
 ;; Coding-system settings
 (set-language-environment 'UTF-8)
@@ -365,7 +353,7 @@
 (define-key cfg-mode-map (kbd "M-l") 'forward-word)
 (define-key cfg-mode-map (kbd "M-j") 'backward-word)
 (define-key cfg-mode-map (kbd "C-j") 'backward-char)
-(define-key cfg-mode-map (kbd "C-;") 'kill-line)
+(define-key cfg-mode-map (kbd "C-u") 'kill-line)
 (define-key cfg-mode-map (kbd "C-o") 'other-window)
 (define-key cfg-mode-map (kbd "C-p") 'beginning-of-defun)
 (define-key cfg-mode-map (kbd "C-n") 'end-of-defun)
@@ -542,16 +530,17 @@
 
 ;; React mode
 
-;(add-hook 'prog-mode-hook #'lsp)
+(add-hook 'js2-mode #'lsp)
+
 (setq gc-cons-threshold (* 100 1024 1024)
       read-process-output-max (* 1024 1024)
       company-idle-delay 0.0
       company-minimum-prefix-length 1
       create-lockfiles nil) ;; lock files will kill `npm start'
-;; (with-eval-after-load 'lsp-mode
-;;   (require 'dap-chrome)
-;;   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-;;   (yas-global-mode))
+(with-eval-after-load 'lsp-mode
+  (require 'dap-chrome)
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+  (yas-global-mode))
 
 (require 'flycheck)
 (setq-default flycheck-disabled-checkers
@@ -571,12 +560,11 @@
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'flycheck-mode-hook 'add-node-modules-path)
 
-(add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 
 (defun rjsx-hook ()
   (setq js-indent-level 2))
-
-(add-hook 'rjsx-mode-hook #'lsp)
+  
 (add-hook 'rjsx-mode-hook 'emmet-mode)
 
 ;; (defun web-mode-init-prettier-hook ()
